@@ -12,7 +12,10 @@ text = """吾輩は猫である。名前はまだ無い。どこで生れたか�
 # ['\n', '。', 'あ', 'い', 'う', 'か', 'が', 'け', 'こ', 'し', 'じ', 'た', 'だ', 'つ', 'て', 'で', 'と', 'ど', 'ぬ', 'の', 'は', 'ま', 'め', 'も', 'る', 'れ', 'を', 'ん', 'ニ', 'ャ', 'ー', '事', '人', '何', '前', '名', '吾', '始', '当', '憶', '所', '暗', '泣', '無', '猫', '生', '薄', '見', '記', '輩', '間', '頓', '（', '）']
 chars = sorted(list(set(text)))
 vocab_size = len(chars)
-stoi = { ch:i for i,ch in enumerate(chars) }
+
+# String to Index トークン化（エンコード）
+stoi= { ch:i for i,ch in enumerate(chars) }
+# Index to String トークン化の逆変換（デコード）
 itos = { i:ch for i,ch in enumerate(chars) }
 encode = lambda s: [stoi[c] for c in s]
 decode = lambda l: ''.join([itos[i] for i in l])
@@ -29,6 +32,7 @@ class BigramLanguageModel(nn.Module):
         self.token_embedding_table = nn.Embedding(vocab_size, vocab_size)
 
     def forward(self, idx, targets=None):
+        # logits: 各文字（トークン）の「次に来る可能性」を表す未調整のスコア
         logits = self.token_embedding_table(idx)
         if targets is None:
             loss = None
